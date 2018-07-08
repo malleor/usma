@@ -28,10 +28,21 @@ def usma():
     for s in stories:
         stories_per_action[s['epic']].append(s)
 
+    # break down stories by actions and milestones
+    milestones = list(set(sum([s['milestones'] for s in stories], []))) + [None]
+    stories_per_action = {a['key']: {m: [] for m in milestones} for a in flat_actions}
+    for s in stories:
+        if len(s['milestones']) == 0:
+            stories_per_action[s['epic']][None].append(s)
+        else:
+            for m in s['milestones']:
+                stories_per_action[s['epic']][m].append(s)
+
     return render_template('usma.html',
                            name='usma',
                            actions_model=actions,
-                           stories_model=stories_per_action)
+                           stories_model=stories_per_action,
+                           milestones=milestones)
 
 
 @app.route("/actions")
@@ -52,10 +63,15 @@ def fetch_stories():
     flat_actions = sum([sum(activities.values(), []) for activities in actions.itervalues()], [])
     stories = _fetch_stories(flat_actions)
 
-    # assign stories to actions
-    stories_per_action = {a['key']: [] for a in flat_actions}
+    # break down stories by actions and milestones
+    milestones = list(set(sum([s['milestones'] for s in stories], [])))
+    stories_per_action = {a['key']: {m: [] for m in milestones + [None]} for a in flat_actions}
     for s in stories:
-        stories_per_action[s['epic']].append(s)
+        if len(s['milestones']) == 0:
+            stories_per_action[s['epic']][None].append(s)
+        else:
+            for m in s['milestones']:
+                stories_per_action[s['epic']][m].append(s)
 
     # form the response
     return jsonify(stories_per_action)
@@ -72,7 +88,7 @@ def _fetch_stories(actions):
     params = {
         'jql': 'filter=%s and "Epic Link" in (%s)' % (BACKLOG_FILTER, ','.join(action_keys)),
         'fieldsByKeys': 'true',
-        'fields': 'status,summary,labels,%s' % FIELD_EPIC_LINK
+        'fields': 'status,summary,labels,%s,fixVersions' % FIELD_EPIC_LINK
     }
     r = rq.get(url, params=params, auth=JIRA_AUTH)
     assert r.status_code / 100 == 2, 'Failed to fetch issues: %d %s' % (r.status_code, r.text)
@@ -124,7 +140,8 @@ def _extract_issue(issue):
         'status': issue['fields']['status']['name'],
         'labels': issue['fields']['labels'],
         'link': '%s/browse/%s' % (JIRA_ADDR, issue['key']),
-        'epic': issue['fields'].get(FIELD_EPIC_LINK, None)
+        'epic': issue['fields'].get(FIELD_EPIC_LINK, None),
+        'milestones': [v['name'] for v in issue['fields'].get('fixVersions', [])]
     }
 
 

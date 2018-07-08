@@ -17,6 +17,13 @@ body {
     vertical-align: top;
 }
 
+.activity-view tbody td {
+    border-top: rgba(0, 0, 0, .1) dashed 1px;
+}
+.activity-view tbody tr:first-child td {
+    border-top: transparent;
+}
+
 .persona-card {
     width: 10em;
     padding: 1em;

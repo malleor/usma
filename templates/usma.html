@@ -35,28 +35,24 @@
       </tr>
       </thead>
       <tbody>
+      {% for milestone in milestones %}
       <tr>
         <th class="milestone-cont">
-          MVP1
+          {% if milestone is not none %}
+            {{milestone}}
+          {% else %}
+            (no milestone)
+          {% endif %}
         </th>
         {% for action in actions %}
         <td class="tasks-cont">
-          {% for s in stories_model[action['key']] %}
+          {% for s in stories_model[action['key']][milestone] %}
           {{ cards.story(s['key'], s['summary']) }}
           {% endfor %}
         </td>
         {% endfor %}
       </tr>
-      <tr>
-        <th class="milestone-cont">
-          MVP2
-        </th>
-        {% for action in actions %}
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-10", "User story 10") }}
-        </td>
-        {% endfor %}
-      </tr>
+      {% endfor %}
       </tbody>
     </table>
   </div>
