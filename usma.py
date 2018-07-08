@@ -11,6 +11,7 @@ JIRA_AUTH = (
     os.environ['JIRA_TOKEN']
 )
 BACKLOG_FILTER = os.environ['BACKLOG_FILTER']
+FIELD_EPIC_LINK = os.environ['FIELD_EPIC_LINK']
 
 
 @app.route("/")
@@ -18,19 +19,69 @@ def usma():
     # fetch actions
     actions = _fetch_actions()
 
-    return render_template('usma.html', name='usma', model=actions)
+    # fetch stories
+    flat_actions = sum([sum(activities.values(), []) for activities in actions.itervalues()], [])
+    stories = _fetch_stories(flat_actions)
+
+    # assign stories to actions
+    stories_per_action = {a['key']: [] for a in flat_actions}
+    for s in stories:
+        stories_per_action[s['epic']].append(s)
+
+    return render_template('usma.html',
+                           name='usma',
+                           actions_model=actions,
+                           stories_model=stories_per_action)
 
 
 @app.route("/actions")
 def fetch_actions():
-    epics = _fetch_actions()
+    # fetch actions
+    actions = _fetch_actions()
 
     # form the response
-    return jsonify(epics)
+    return jsonify(actions)
+
+
+@app.route("/stories")
+def fetch_stories():
+    # fetch actions
+    actions = _fetch_actions()
+
+    # fetch stories
+    flat_actions = sum([sum(activities.values(), []) for activities in actions.itervalues()], [])
+    stories = _fetch_stories(flat_actions)
+
+    # assign stories to actions
+    stories_per_action = {a['key']: [] for a in flat_actions}
+    for s in stories:
+        stories_per_action[s['epic']].append(s)
+
+    # form the response
+    return jsonify(stories_per_action)
 
 
 with app.test_request_context():
     url_for("static", filename="usma.css")
+
+
+def _fetch_stories(actions):
+    # fetch data from Jira
+    url = JIRA_ADDR + '/rest/api/2/search'
+    action_keys = [a['key'] for a in actions]
+    params = {
+        'jql': 'filter=%s and "Epic Link" in (%s)' % (BACKLOG_FILTER, ','.join(action_keys)),
+        'fieldsByKeys': 'true',
+        'fields': 'status,summary,labels,%s' % FIELD_EPIC_LINK
+    }
+    r = rq.get(url, params=params, auth=JIRA_AUTH)
+    assert r.status_code / 100 == 2, 'Failed to fetch issues: %d %s' % (r.status_code, r.text)
+    stories = r.json()['issues']
+
+    # transform
+    stories = [_extract_issue(s) for s in stories]
+
+    return stories
 
 
 def _fetch_actions():
@@ -72,7 +123,8 @@ def _extract_issue(issue):
         'summary': issue['fields']['summary'],
         'status': issue['fields']['status']['name'],
         'labels': issue['fields']['labels'],
-        'link': '%s/browse/%s' % (JIRA_ADDR, issue['key'])
+        'link': '%s/browse/%s' % (JIRA_ADDR, issue['key']),
+        'epic': issue['fields'].get(FIELD_EPIC_LINK, None)
     }
 
 

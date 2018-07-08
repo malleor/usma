@@ -10,7 +10,7 @@
 
   {% import 'cards.html' as cards %}
 
-  {% for persona, activities in model.iteritems() %}
+  {% for persona, activities in actions_model.iteritems() %}
   {% for activity, actions in activities.iteritems() %}
   <div class="container-fluid activity-view">
     <table>
@@ -41,9 +41,9 @@
         </th>
         {% for action in actions %}
         <td class="tasks-cont">
-          {{ cards.story("JIRA-1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi.") }}
-          {{ cards.story("JIRA-2", "User story 2") }}
-          {{ cards.story("JIRA-3", "User story 3") }}
+          {% for s in stories_model[action['key']] %}
+          {{ cards.story(s['key'], s['summary']) }}
+          {% endfor %}
         </td>
         {% endfor %}
       </tr>
