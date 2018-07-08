@@ -27,9 +27,8 @@ body {
 .persona-card {
     width: 10em;
     padding: 1em;
-    background: #F4F5F7;
+    background: transparent;
     text-align: center;
-    border-radius: 2em;
 }
 .persona-card .persona-photo {
     font-size: 5em;
@@ -45,6 +44,7 @@ th.activity-cont {
 }
 
 .story-card {
+    display: block;
     width: 20em;
     padding: .8em;
     margin: .5em 0;
@@ -52,6 +52,12 @@ th.activity-cont {
     border-radius: 2px;
     box-shadow: 0px 1px 2px 0px rgba(9, 30, 66, 0.25);
     background: white;
+    color: inherit;
+}
+.story-card:hover {
+    color: #004085;
+    text-decoration: none;
+    box-shadow: 0px 2px 6px 0px rgba(9, 30, 66, 0.25);
 }
 
 .card-stats {

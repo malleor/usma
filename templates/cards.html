@@ -1,20 +1,20 @@
-{% macro story(key, summary) -%}
-    <div class="story-card">
+{% macro story(issue) -%}
+    <a href="{{issue['link']}}" target="_blank" class="story-card">
         <section class="story-summary">
-            {{ summary }}
+            {{issue['summary']}}
         </section>
         <section class="card-stats">
             <div class="card-stat-left">
-                <span class="ghx-field ghx-field-icon" data-tooltip="Medium priority">
+                <!--<span class="ghx-field ghx-field-icon" data-tooltip="Medium priority">-->
                     <!--<img src="https://7sensing.atlassian.net/images/icons/priorities/medium.svg">-->
-                </span>
-                <span class="ghx-field">
+                <!--</span>-->
+                <!--<span class="ghx-field">-->
                     <!--<aui-badge class="ghx-estimate" data-tooltip="5 Story Points">5</aui-badge>-->
-                </span>
+                <!--</span>-->
             </div>
             <div class="card-stat-right">
-                <span class="story-key">{{ key }}</span>
+                <span class="story-key">{{issue['key']}}</span>
             </div>
         </section>
-    </div>
+    </a>
 {%- endmacro %}

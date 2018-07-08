@@ -29,7 +29,7 @@
       <tr>
         {% for action in actions %}
         <th class="action-cont">
-          {{ cards.story(action['key'], action['summary']) }}
+          {{ cards.story(action) }}
         </th>
         {% endfor %}
       </tr>
@@ -47,7 +47,7 @@
         {% for action in actions %}
         <td class="tasks-cont">
           {% for s in stories_model[action['key']][milestone] %}
-          {{ cards.story(s['key'], s['summary']) }}
+          {{ cards.story(s) }}
           {% endfor %}
         </td>
         {% endfor %}
