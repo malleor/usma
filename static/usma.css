@@ -8,7 +8,8 @@ body {
 }
 
 .activity-view {
-    overflow-x:
+    overflow-x: scroll;
+    margin-bottom: 5em;
 }
 
 .activity-view th, .activity-view td {
@@ -27,7 +28,7 @@ body {
     font-size: 5em;
 }
 .persona-card .persona-name {
-    font-size: 3em;
+    font-size: 1.5em;
 }
 
 th.activity-cont {

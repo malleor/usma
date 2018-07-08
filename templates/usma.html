@@ -10,6 +10,8 @@
 
   {% import 'cards.html' as cards %}
 
+  {% for persona, activities in model.iteritems() %}
+  {% for activity, actions in activities.iteritems() %}
   <div class="container-fluid activity-view">
     <table>
       <thead>
@@ -17,29 +19,19 @@
         <th class="persona-cont" rowspan="2">
           <div class="persona-card">
             <div class="persona-photo"><i class="fas fa-user-tie"></i></div>
-            <div class="persona-name">VIP</div>
+            <div class="persona-name">{{persona}}</div>
           </div>
         </th>
-        <th class="activity-cont" colspan="5">
-          <h2>Activity</h2>
+        <th class="activity-cont" colspan="{{actions|length}}">
+          <h2>{{activity}}</h2>
         </th>
       </tr>
       <tr>
+        {% for action in actions %}
         <th class="action-cont">
-          {{ cards.story("JIRA-20", "Action 1") }}
+          {{ cards.story(action['key'], action['summary']) }}
         </th>
-        <th class="action-cont">
-          {{ cards.story("JIRA-21", "Action 2") }}
-        </th>
-        <th class="action-cont">
-          {{ cards.story("JIRA-22", "Action 3") }}
-        </th>
-        <th class="action-cont">
-          {{ cards.story("JIRA-23", "Action 4") }}
-        </th>
-        <th class="action-cont">
-          {{ cards.story("JIRA-24", "Action 5") }}
-        </th>
+        {% endfor %}
       </tr>
       </thead>
       <tbody>
@@ -47,45 +39,27 @@
         <th class="milestone-cont">
           MVP1
         </th>
+        {% for action in actions %}
         <td class="tasks-cont">
           {{ cards.story("JIRA-1", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nibh augue, suscipit a, scelerisque sed, lacinia in, mi.") }}
           {{ cards.story("JIRA-2", "User story 2") }}
           {{ cards.story("JIRA-3", "User story 3") }}
         </td>
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-4", "User story 4") }}
-        </td>
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-5", "User story 5") }}
-          {{ cards.story("JIRA-6", "User story 6") }}
-        </td>
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-7", "User story 7") }}
-          {{ cards.story("JIRA-8", "User story 8") }}
-        </td>
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-9", "User story 9") }}
-        </td>
+        {% endfor %}
       </tr>
       <tr>
         <th class="milestone-cont">
           MVP2
         </th>
+        {% for action in actions %}
         <td class="tasks-cont">
           {{ cards.story("JIRA-10", "User story 10") }}
         </td>
-        <td class="tasks-cont">
-        </td>
-        <td class="tasks-cont">
-        </td>
-        <td class="tasks-cont">
-          {{ cards.story("JIRA-11", "User story 11") }}
-          {{ cards.story("JIRA-12", "User story 12") }}
-        </td>
-        <td class="tasks-cont">
-        </td>
+        {% endfor %}
       </tr>
       </tbody>
     </table>
   </div>
+  {% endfor %}
+  {% endfor %}
 </body>

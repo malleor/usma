@@ -15,7 +15,10 @@ BACKLOG_FILTER = os.environ['BACKLOG_FILTER']
 
 @app.route("/")
 def usma():
-    return render_template('usma.html', name='usma')
+    # fetch actions
+    actions = _fetch_actions()
+
+    return render_template('usma.html', name='usma', model=actions)
 
 
 @app.route("/actions")
