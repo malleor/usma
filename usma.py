@@ -45,13 +45,21 @@ def _fetch_actions():
     # transform
     epics = [_extract_issue(e) for e in epics]
     personas = _extract_personas(sum([e['labels'] for e in epics], []))
-    epics_per_persona = {p: [] for p in personas}
+    epics_per_persona = {p: {} for p in personas}
     for e in epics:
-        pp = set([_get_persona(l) for l in e['labels']])
-        pp.remove(None)
-        assert len(pp) > 0, 'an action has no persona attached. labels: ' + ','.join(e['labels'])
+        # get persona
+        pp = _extract_personas(e['labels'])
+        assert len(pp) > 0, 'an action has no PERSONA attached. labels: ' + ','.join(e['labels'])
+
+        # get activity
+        aa = _extract_activities(e['labels'])
+        assert len(aa) > 0, 'an action has no ACTIVITY attached. labels: ' + ','.join(e['labels'])
+
+        # store it
         for p in pp:
-            epics_per_persona[p].append(e)
+            for a in aa:
+                epics = epics_per_persona[p].get(a, [])
+                epics_per_persona[p][a] = epics + [e]
     return epics_per_persona
 
 
@@ -69,8 +77,19 @@ def _get_persona(l):
     return l.split('USMA_PERSONA_')[-1] if 'USMA_PERSONA_' in l else None
 
 
+def _get_activity(l):
+    return l.split('USMA_ACTIVITY_')[-1] if 'USMA_ACTIVITY_' in l else None
+
+
 def _extract_personas(labels):
     labels = [_get_persona(l) for l in labels]
+    labels = set(labels)
+    labels.remove(None)
+    return labels
+
+
+def _extract_activities(labels):
+    labels = [_get_activity(l) for l in labels]
     labels = set(labels)
     labels.remove(None)
     return labels
