@@ -1,17 +1,10 @@
 from flask import Flask, render_template, url_for, jsonify
 import requests as rq
 import os
+from simple_settings import settings
 
 
 app = Flask(__name__)
-
-JIRA_ADDR = 'https://' + os.environ['JIRA_ADDR']
-JIRA_AUTH = (
-    os.environ['JIRA_USER'],
-    os.environ['JIRA_TOKEN']
-)
-BACKLOG_FILTER = os.environ['BACKLOG_FILTER']
-FIELD_EPIC_LINK = os.environ['FIELD_EPIC_LINK']
 
 
 @app.route("/")
@@ -83,14 +76,14 @@ with app.test_request_context():
 
 def _fetch_stories(actions):
     # fetch data from Jira
-    url = JIRA_ADDR + '/rest/api/2/search'
+    url = settings.JIRA_ADDR + '/rest/api/2/search'
     action_keys = [a['key'] for a in actions]
     params = {
-        'jql': 'filter=%s and "Epic Link" in (%s)' % (BACKLOG_FILTER, ','.join(action_keys)),
+        'jql': 'filter=%s and "Epic Link" in (%s)' % (settings.BACKLOG_FILTER, ','.join(action_keys)),
         'fieldsByKeys': 'true',
-        'fields': 'status,summary,labels,%s,fixVersions' % FIELD_EPIC_LINK
+        'fields': 'status,summary,labels,%s,fixVersions' % settings.FIELD_EPIC_LINK
     }
-    r = rq.get(url, params=params, auth=JIRA_AUTH)
+    r = rq.get(url, params=params, auth=settings.JIRA_AUTH)
     assert r.status_code / 100 == 2, 'Failed to fetch issues: %d %s' % (r.status_code, r.text)
     stories = r.json()['issues']
 
@@ -102,13 +95,13 @@ def _fetch_stories(actions):
 
 def _fetch_actions():
     # fetch data from Jira
-    url = JIRA_ADDR + '/rest/api/2/search'
+    url = settings.JIRA_ADDR + '/rest/api/2/search'
     params = {
-        'jql': 'filter=%s and issuetype=epic and labels=USMA_ACTION' % BACKLOG_FILTER,
+        'jql': 'filter=%s and issuetype=epic and labels=USMA_ACTION' % settings.BACKLOG_FILTER,
         'fieldsByKeys': 'true',
         'fields': 'status,summary,labels'
     }
-    r = rq.get(url, params=params, auth=JIRA_AUTH)
+    r = rq.get(url, params=params, auth=settings.JIRA_AUTH)
     assert r.status_code / 100 == 2, 'Failed to fetch issues: %d %s' % (r.status_code, r.text)
     epics = r.json()['issues']
 
@@ -139,8 +132,8 @@ def _extract_issue(issue):
         'summary': issue['fields']['summary'],
         'status': issue['fields']['status']['name'],
         'labels': issue['fields']['labels'],
-        'link': '%s/browse/%s' % (JIRA_ADDR, issue['key']),
-        'epic': issue['fields'].get(FIELD_EPIC_LINK, None),
+        'link': '%s/browse/%s' % (settings.JIRA_ADDR, issue['key']),
+        'epic': issue['fields'].get(settings.FIELD_EPIC_LINK, None),
         'milestones': [v['name'] for v in issue['fields'].get('fixVersions', [])]
     }
 
