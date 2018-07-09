@@ -42,6 +42,17 @@ th.activity-cont {
     text-align: left;
     padding-left: 2em;
 }
+.activity-wrapper {
+    display: flex;
+}
+.activity-wrapper>h2 {
+    flex: 1 0 auto;
+}
+.activity-wrapper>.activity-tools {
+    flex: 1 1 auto;
+    flex-direction: row-reverse;
+    display: flex;
+}
 
 .story-card {
     display: block;
@@ -82,4 +93,25 @@ th.milestone-cont {
     text-align: right;
     padding: 2em 1em;
     /* border-right: rgba(93, 133, 204, .5) solid 3px; */
+}
+
+#reorderActionsModal .modal-body {
+    display: flex;
+    flex-direction: column;
+}
+#reorderActionsModal .card-modal-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+#reorderActionsModal .card-modal-wrapper .story-card {
+    flex: 1 0 auto;
+}
+#reorderActionsModal .card-modal-wrapper .card-reorder-tools {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#reorderActionsModal .card-modal-wrapper .card-reorder-tools .btn {
+    margin: .2em .6em;
 }

@@ -12,7 +12,7 @@
 
   {% for persona, activities in actions_model.iteritems() %}
   {% for activity, actions in activities.iteritems() %}
-  <div class="container-fluid activity-view">
+  <div class="container-fluid activity-view activity_{{persona}}_{{activity}}">
     <table>
       <thead>
       <tr>
@@ -23,7 +23,17 @@
           </div>
         </th>
         <th class="activity-cont" colspan="{{actions|length}}">
-          <h2>{{activity}}</h2>
+          <div class="activity-wrapper">
+            <h2>{{activity}}</h2>
+            <div class="activity-tools">
+              <button type="button" class="btn btn-outline-secondary"
+                      data-toggle="modal"
+                      data-target="#reorderActionsModal"
+                      data-activity="activity_{{persona}}_{{activity}}">
+                <i class="fas fa-arrows-alt-h"></i>
+              </button>
+            </div>
+          </div>
         </th>
       </tr>
       <tr>
@@ -58,4 +68,78 @@
   </div>
   {% endfor %}
   {% endfor %}
+
+  <!-- Modal -->
+  <div class="modal fade" id="reorderActionsModal" tabindex="-1" role="dialog" aria-labelledby="reorderActionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Rearrange actions</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" disabled>Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $('#reorderActionsModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+      var container_activity = button.data('activity') // Extract info from data-* attributes
+      var modal = $(this)
+
+      // fetch actions
+      var actions_el = $(`.${container_activity} .action-cont .story-card`);
+      console.log(container_activity);
+      console.log(actions_el);
+
+      // set up the layout
+      modal.find('.modal-body').html(null).append(actions_el.clone());
+      modal.find('.story-card').wrap('<div class="card-modal-wrapper"></div>')
+      modal.find('.card-modal-wrapper').each(function(ind, el){
+        $(el).css('order', ind)
+      });
+      modal.find('.card-modal-wrapper').append('<div class="card-reorder-tools"></div>');
+
+      // set up tools
+      function move(what, howmuch) {
+        var wrapper = $(what).parents('.card-modal-wrapper');
+        var wrapper_order = parseInt(wrapper.css('order'));
+        var other_order = wrapper_order + howmuch;
+        var other = modal.find('.card-modal-wrapper').filter(function(){return $(this).css('order') == `${other_order}`;})
+
+        min_order = 0;
+        max_order = modal.find('.card-modal-wrapper').length - 1;
+        if(wrapper_order < min_order || wrapper_order > max_order)
+          return;
+        if(other_order < min_order || other_order > max_order)
+          return;
+
+        console.log('WRAPPER:', wrapper_order, wrapper);
+        console.log('OTHER:', other_order, other);
+
+        other.css('order', wrapper_order);
+        wrapper.css('order', other_order);
+      }
+      function moveUp() {
+        console.log('UP', this);
+        move(this, -1);
+      }
+      function moveDown() {
+        console.log('DOWN', this);
+        move(this, 1);
+      }
+      modal.find('.card-reorder-tools').append([
+        $('<button type="button" class="btn btn-outline-secondary btn-reorder-up"><i class="fas fa-arrow-up"></i></button>').click(moveUp),
+        $('<button type="button" class="btn btn-outline-secondary btn-reorder-down"><i class="fas fa-arrow-down"></i></button>').click(moveDown)
+      ]);
+    })
+  </script>
 </body>

@@ -1,5 +1,5 @@
 {% macro story(issue) -%}
-    <a href="{{issue['link']}}" target="_blank" class="story-card">
+    <a href="{{issue['link']}}" target="_blank" class="story-card card_{{issue['key']}}">
         <section class="story-summary">
             {{issue['summary']}}
         </section>
