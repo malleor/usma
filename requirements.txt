@@ -1,2 +1,4 @@
 flask
+jinja2
 simple-settings
+requests

@@ -5,7 +5,7 @@ Usma assumes you have `python`, `pip` and `make`.
 # Building
 
 ```
-make build
+sudo -H make build
 ```
 
 # Running
