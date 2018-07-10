@@ -31,6 +31,10 @@ def usma():
             for m in s['milestones']:
                 stories_per_action[s['epic']][m].append(s)
 
+    # force milestones order, based on settings
+    if settings.MILESTONES:
+        milestones = settings.MILESTONES + [m for m in milestones if m not in settings.MILESTONES]
+
     return render_template('usma.html',
                            name='usma',
                            actions_model=actions,
