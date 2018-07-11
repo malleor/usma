@@ -35,11 +35,16 @@ def usma():
     if settings.MILESTONES:
         milestones = settings.MILESTONES + [m for m in milestones if m not in settings.MILESTONES]
 
+    # prep persona icons
+    persona_images = { p: settings.PERSONA_IMAGES.get(p, 'static/generic-user.png')
+                       for p in actions.keys() }
+
     return render_template('usma.html',
                            name='usma',
                            actions_model=actions,
                            stories_model=stories_per_action,
-                           milestones=milestones)
+                           milestones=milestones,
+                           persona_images=persona_images)
 
 
 @app.route("/actions")
