@@ -156,10 +156,34 @@
     })
 
     $('#milestone-filter button').on('click', function(){
+      // who's calling?
       var milestone = $(this).attr('data-milestone');
       console.log('Selecting milestone', milestone);
 
+      // toggle swimlanes
       $(`.milestone-swimlane[data-milestone="${milestone}"]`).toggle();
+
+      // remember
+      localStorage.setItem(`filter-${milestone}`, !$(this).hasClass('active'));
+    });
+
+    $( document ).ready(function() {
+      $('#milestone-filter button').each(function(){
+        // recall state
+        var milestone = $(this).attr('data-milestone');
+        var active = localStorage.getItem(`filter-${milestone}`);
+        if(active)
+          active = (active == 'true');
+        else
+          active = $(this).hasClass('active');
+        console.log(`Milestone ${milestone} should be ${active ? 'checked' : 'unchecked'}`);
+
+        // apply
+        if(!active && $(this).hasClass('active'))
+          $(this).click();
+        else if(active && !$(this).hasClass('active'))
+          $(this).click();
+      });
     });
   </script>
 </body>
