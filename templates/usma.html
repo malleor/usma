@@ -10,6 +10,17 @@
 
   {% import 'cards.html' as cards %}
 
+  <div class="container">
+    <div class="btn-group" id="milestone-filter" role="group" aria-label="Milestone filter">
+        {% for milestone in milestones %}
+        <button type="button" class="btn btn-info active" data-toggle="button" aria-pressed="true"
+                data-milestone="{{milestone}}">
+          {{milestone}}
+        </button>
+        {% endfor %}
+    </div>
+  </div>
+
   {% for persona, activities in actions_model.iteritems() %}
   {% for activity, actions in activities.iteritems() %}
   <div class="container-fluid activity-view activity_{{persona}}_{{activity}}">
@@ -48,7 +59,7 @@
       </thead>
       <tbody>
       {% for milestone in milestones %}
-      <tr>
+      <tr class="milestone-swimlane" data-milestone="{{milestone}}">
         <th class="milestone-cont">
           {% if milestone is not none %}
             {{milestone}}
@@ -143,5 +154,12 @@
         $('<button type="button" class="btn btn-outline-secondary btn-reorder-down"><i class="fas fa-arrow-down"></i></button>').click(moveDown)
       ]);
     })
+
+    $('#milestone-filter button').on('click', function(){
+      var milestone = $(this).attr('data-milestone');
+      console.log('Selecting milestone', milestone);
+
+      $(`.milestone-swimlane[data-milestone="${milestone}"]`).toggle();
+    });
   </script>
 </body>

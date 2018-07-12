@@ -10,6 +10,7 @@ body {
 .activity-view {
     overflow-x: scroll;
     margin-bottom: 5em;
+    margin-top: 5em;
 }
 
 .activity-view th, .activity-view td {
