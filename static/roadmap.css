@@ -14,8 +14,24 @@
     padding: .5em;
     border-radius: .5em;
 }
+.action-header {
+    font-weight: bold;
+    display: block;
+    cursor: pointer;
+}
+.action-header:hover {
+    margin-bottom: 1em;
+}
 .action-body {
     padding: .5em;
+    overflow: hidden;
+    height: auto;
+    transition: height 200ms ease-out;
+}
+.action-body.collapsed {
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .unassigned-actions {
     margin-top: 5em;

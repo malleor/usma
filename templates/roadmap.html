@@ -21,7 +21,7 @@
           <div class="milestone">{{milestone}}</div>
           {% for action, stories in actions.iteritems() %}
           <div class="action">
-            <div class="action-header">{{action}}</div>
+            <a class="action-header">{{action}}</a>
             <div class="action-body">
               {% for story in stories %}
                 {{ cards.story(story) }}
@@ -47,6 +47,9 @@
 
   <script>
     $( document ).ready(function() {
+      $('.action-header').on('click', function(){
+        $(this).parent().find('.action-body').toggleClass('collapsed')
+      });
     });
   </script>
 </body>
