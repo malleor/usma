@@ -81,7 +81,31 @@ def fetch_stories():
 
 @app.route("/roadmap")
 def roadmap():
-    return render_template('roadmap.html')
+    # fetch actions
+    actions = _fetch_actions()
+
+    # fetch stories
+    flat_actions = sum([sum(activities.values(), []) for activities in actions.itervalues()], [])
+    stories = _fetch_stories(flat_actions)
+
+    # break down stories by actions and milestones
+    milestones = list(set(sum([s['milestones'] for s in stories], [])))
+    stories_breakdown = {m: {a['key']: [] for a in flat_actions} for m in milestones + [None]}
+    for s in stories:
+        if len(s['milestones']) == 0:
+            stories_breakdown[None][s['epic']].append(s)
+        else:
+            for m in s['milestones']:
+                stories_breakdown[m][s['epic']].append(s)
+    if settings.MILESTONES:
+        milestones = settings.MILESTONES + [m for m in milestones if m not in settings.MILESTONES]
+    unassigned_actions=stories_breakdown[None]
+    stories_breakdown = [(m, {a: stories for a, stories in stories_breakdown[m].iteritems() if len(stories) > 0}) for m in milestones]
+
+    return render_template('roadmap.html',
+                           milestones=stories_breakdown,
+                           unassigned_actions=unassigned_actions)
+    # return jsonify(stories_breakdown)
 
 
 with app.test_request_context():

@@ -1,0 +1,24 @@
+.roadmap-body {
+    display: flex;
+    flex-direction: row;
+}
+.actions-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.action {
+    margin: .8em;
+    background-color: #F4F5F7;
+    padding: .5em;
+    border-radius: .5em;
+}
+.action-body {
+    padding: .5em;
+}
+.unassigned-actions {
+    margin-top: 5em;
+    margin-bottom: 10em;
+}
+.unassigned-actions .title {
+    font-size: 1.7em;
+}

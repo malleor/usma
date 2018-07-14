@@ -16,13 +16,33 @@
       <!--milestones will go here, i think-->
     </div>
     <div class="roadmap-body">
-      {% for milestone, containers in milestones %}
-
+      {% for milestone, actions in milestones %}
+        <div class="actions-wrapper">
+          <div class="milestone">{{milestone}}</div>
+          {% for action, stories in actions.iteritems() %}
+          <div class="action">
+            <div class="action-header">{{action}}</div>
+            <div class="action-body">
+              {% for story in stories %}
+                {{ cards.story(story) }}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       {% endfor %}
     </div>
   </div>
 
-  <div class="container unassigned-stories">
+  <div class="container unassigned-actions">
+    <h1 class="title">Unassigned actions</h1>
+    <div class="row">
+    {% for action in unassigned_actions %}
+      <div class="action col-2">
+        <div class="action-header">{{action}}</div>
+      </div>
+    {% endfor %}
+    </div>
   </div>
 
   <script>
