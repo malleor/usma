@@ -100,7 +100,8 @@ def roadmap():
     if settings.MILESTONES:
         milestones = settings.MILESTONES + [m for m in milestones if m not in settings.MILESTONES]
     unassigned_actions=stories_breakdown[None]
-    stories_breakdown = [(m, {a: stories for a, stories in stories_breakdown[m].iteritems() if len(stories) > 0}) for m in milestones]
+    actions_by_key = {a['key']: a['summary'] for a in flat_actions}
+    stories_breakdown = [(m, {actions_by_key[a]: stories for a, stories in stories_breakdown[m].iteritems() if len(stories) > 0}) for m in milestones]
 
     return render_template('roadmap.html',
                            milestones=stories_breakdown,

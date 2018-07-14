@@ -1,8 +1,10 @@
 .roadmap-body {
     display: flex;
-    flex-direction: row;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
 }
 .actions-wrapper {
+    flex: 0 0px;
     display: flex;
     flex-direction: column;
 }
