@@ -101,7 +101,16 @@ def roadmap():
         milestones = settings.MILESTONES + [m for m in milestones if m not in settings.MILESTONES]
     actions_by_key = {a['key']: a['summary'] for a in flat_actions}
     unassigned_actions = [actions_by_key[a] for a in stories_breakdown[None].keys()]
-    stories_breakdown = [(m, {actions_by_key[a]: stories for a, stories in stories_breakdown[m].iteritems() if len(stories) > 0}) for m in milestones]
+    stories_breakdown = [
+        (m, {a: {
+                    'summary': actions_by_key[a],
+                    'done': (len([1 for s in stories if s['status'] == 'Done'])*100. / len(stories)) if len(stories) > 0 else 0,
+                    'inprogress': (len([1 for s in stories if s['status'] == 'In Progress'])*100. / len(stories)) if len(stories) > 0 else 0,
+                    'stories': stories
+                }
+             for a, stories in stories_breakdown[m].iteritems() if len(stories) > 0})
+        for m in milestones
+    ]
 
     return render_template('roadmap.html',
                            milestones=stories_breakdown,

@@ -19,11 +19,12 @@
       {% for milestone, actions in milestones %}
         <div class="actions-wrapper">
           <div class="milestone">{{milestone}}</div>
-          {% for action, stories in actions.iteritems() %}
-          <div class="action">
-            <a class="action-header">{{action}}</a>
+          {% for _, action in actions.iteritems() %}
+          <div class="action"
+               style="background: linear-gradient(to right, #b3efb3 {{action['done']}}%, #c4dafb {{action['done']}}%, #acceff {{action['done']+action['inprogress']}}%, #f4f5f7 {{action['done']+action['inprogress']}}%)">
+            <a class="action-header">{{action['summary']}}</a>
             <div class="action-body">
-              {% for story in stories %}
+              {% for story in action['stories'] %}
                 {{ cards.story(story) }}
               {% endfor %}
             </div>
