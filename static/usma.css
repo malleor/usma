@@ -3,58 +3,6 @@ body {
     padding-top: 5em;
 }
 
-.activity-cont, .action-cont, .tasks-cont {
-    background: #F4F5F7;
-}
-
-.activity-view {
-    overflow-x: scroll;
-    margin-bottom: 5em;
-    margin-top: 5em;
-}
-
-.activity-view th, .activity-view td {
-    padding: .5em;
-    vertical-align: top;
-}
-
-.activity-view tbody td {
-    border-top: rgba(0, 0, 0, .1) dashed 1px;
-}
-.activity-view tbody tr:first-child td {
-    border-top: transparent;
-}
-
-.persona-card {
-    width: 10em;
-    padding: 1em;
-    background: transparent;
-    text-align: center;
-}
-.persona-card .persona-photo {
-    font-size: 5em;
-}
-.persona-card .persona-name {
-    font-size: 1.5em;
-}
-
-th.activity-cont {
-    vertical-align: bottom;
-    text-align: left;
-    padding-left: 2em;
-}
-.activity-wrapper {
-    display: flex;
-}
-.activity-wrapper>h2 {
-    flex: 1 0 auto;
-}
-.activity-wrapper>.activity-tools {
-    flex: 1 1 auto;
-    flex-direction: row-reverse;
-    display: flex;
-}
-
 .story-card {
     display: block;
     width: 20em;
@@ -97,32 +45,4 @@ th.activity-cont {
 .story-key {
     font-size: .8em;
     opacity: .8;
-}
-
-th.milestone-cont {
-    vertical-align: top;
-    text-align: right;
-    padding: 2em 1em;
-    /* border-right: rgba(93, 133, 204, .5) solid 3px; */
-}
-
-#reorderActionsModal .modal-body {
-    display: flex;
-    flex-direction: column;
-}
-#reorderActionsModal .card-modal-wrapper {
-    display: flex;
-    flex-direction: row;
-}
-#reorderActionsModal .card-modal-wrapper .story-card {
-    flex: 1 0 auto;
-}
-#reorderActionsModal .card-modal-wrapper .card-reorder-tools {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-#reorderActionsModal .card-modal-wrapper .card-reorder-tools .btn {
-    margin: .2em .6em;
 }

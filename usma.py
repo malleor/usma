@@ -7,8 +7,8 @@ from simple_settings import settings
 app = Flask(__name__)
 
 
-@app.route("/")
-def usma():
+@app.route("/storymap")
+def storymap():
     # fetch actions
     actions = _fetch_actions()
 
@@ -39,7 +39,7 @@ def usma():
     persona_images = { p: settings.PERSONA_IMAGES.get(p, 'static/generic-user.png')
                        for p in actions.keys() }
 
-    return render_template('usma.html',
+    return render_template('storymap.html',
                            name='usma',
                            actions_model=actions,
                            stories_model=stories_per_action,
@@ -77,6 +77,11 @@ def fetch_stories():
 
     # form the response
     return jsonify(stories_per_action)
+
+
+@app.route("/roadmap")
+def roadmap():
+    return render_template('roadmap.html')
 
 
 with app.test_request_context():
