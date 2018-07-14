@@ -19,7 +19,7 @@
     display: block;
     cursor: pointer;
 }
-.action-header:hover {
+.roadmap-body .action-header:hover {
     margin-bottom: 1em;
 }
 .action-body {
