@@ -127,7 +127,7 @@ def _fetch_stories(actions):
     url = settings.JIRA_ADDR + '/rest/api/2/search'
     action_keys = [a['key'] for a in actions]
     params = {
-        'jql': 'filter=%s and "Epic Link" in (%s) order by rank' % (settings.BACKLOG_FILTER, ','.join(action_keys)),
+        'jql': '"Epic Link" in (%s) order by rank' % (','.join(action_keys),),
         'fieldsByKeys': 'true',
         'fields': 'status,summary,labels,%s,fixVersions' % settings.FIELD_EPIC_LINK
     }
